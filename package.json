@@ -1,0 +1,32 @@
+{
+  "name": "welow",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Game bot with destructible stuff, elo rank, fatal defeats and fun",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "tsc --noEmit",
+    "start": "node .",
+    "reload": "node dist/reloadCommands.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CamilleAbella/welow.git"
+  },
+  "author": "ghom",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/CamilleAbella/welow/issues"
+  },
+  "homepage": "https://github.com/CamilleAbella/welow#readme",
+  "dependencies": {
+    "@discordjs/builders": "^0.12.0",
+    "@discordjs/rest": "^0.3.0",
+    "discord-api-types": "^0.26.1",
+    "discord.js": "^13.6.0",
+    "dotenv": "^14.3.0"
+  },
+  "devDependencies": {
+    "typescript": "^4.5.5"
+  }
+}
