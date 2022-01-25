@@ -4,8 +4,10 @@
   "type": "module",
   "description": "Game bot with destructible stuff, elo rank, fatal defeats and fun",
   "main": "dist/index.js",
+  "types": "index.d.ts",
   "scripts": {
     "test": "tsc --noEmit",
+    "build": "tsc",
     "start": "node .",
     "reload": "node dist/reloadCommands.js",
     "format": "prettier --write src"

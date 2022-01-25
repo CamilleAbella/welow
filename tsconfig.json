@@ -1,9 +1,19 @@
 {
   "compilerOptions": {
+    "strict": true,
     "outDir": "dist",
     "rootDir": "src",
     "module": "esnext",
     "target": "ES2017",
-    "moduleResolution": "Node"
-  }
+    "moduleResolution": "Node",
+    "typeRoots": [ "./index.d.ts", "./node_modules/@types"]
+  },
+  "include": [
+    "index.d.ts",
+    "src/**/*.ts",
+  ],
+  "exclude": [
+    "node_modules",
+    "**/*.spec.ts"
+  ]
 }

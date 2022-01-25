@@ -3,7 +3,7 @@ import { Client, Intents } from "discord.js"
 
 const client = new Client({ intents: [Intents.FLAGS.GUILDS] })
 
-client.on("ready", () => {
+client.on("ready", (client) => {
   console.log(`Logged in as ${client.user.tag}!`)
 })
 
