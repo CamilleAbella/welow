@@ -30,6 +30,7 @@ export interface ActionContext {
 export interface Actions {
   attack: [damages: number, element?: ElementName]
   heal: [heal: number]
+  buff: [stat: keyof app.Stats, value: number]
 }
 
 export type ActionPattern<Name extends ActionName> =
@@ -38,6 +39,13 @@ export type ActionPattern<Name extends ActionName> =
     : ` ${Actions[Name][1]}${Actions[Name][2] extends undefined
         ? ""
         : ` ${Actions[Name][2]}`}`}`
+
+//todo: setup esbuild for load this hard type:
+// export type ActionPatterns = `${ActionPattern<ActionName>}${
+//   | ""
+//   | ` ${ActionPattern<ActionName>}${
+//       | ""
+//       | ` ${ActionPattern<ActionName>}`}`}`
 
 export const actions = [
   new Action("attack", ({ fight, enemy }, damages, element) => {
@@ -48,4 +56,5 @@ export const actions = [
     me.hp = Math.min(maxHp, me.hp + Number(heal))
     return true
   }),
+  new Action("buff", () => false),
 ]

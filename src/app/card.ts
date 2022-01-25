@@ -6,7 +6,7 @@ export interface Card {
   shop: boolean | null
   /**
    * action patterns separated by semicolon.
-   * @example attack plant 2
+   * @example attack plant 1; heal 2
    */
   actions: app.ActionPattern<app.ActionName>
 }
