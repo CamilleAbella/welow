@@ -1,4 +1,5 @@
 import * as discord from "discord.js"
+import * as app from "../app"
 import knex from "knex"
 
 /**
@@ -6,6 +7,14 @@ import knex from "knex"
  * @todo add table player in database
  */
 export interface Player {
+  /**
+   * Character name
+   */
+  name: string
+  /**
+   *
+   */
+  class: app.ClassName
   /**
    * Player is a bot ?
    * @todo: not includes bots in ranked leaderboard
@@ -47,6 +56,8 @@ export function getPlayer(
   if (!user) {
     // make bot player
     return {
+      name: "Bot",
+      class: app.randomClassName(),
       bot: true,
       id: discord.SnowflakeUtil.generate(),
       level: 1,

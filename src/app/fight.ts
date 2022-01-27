@@ -1,4 +1,3 @@
-import * as discord from "discord.js"
 import knex from "knex"
 
 import * as app from "../app"
@@ -8,9 +7,16 @@ export interface FightResults {
   loser?: app.Fighter
 }
 
+export interface FightContext {
+  me: app.Fighter
+  enemy: app.Fighter
+  fight: app.Fight
+}
+
 export class Fight {
   players: app.Player[]
   fighters: app.Fighter[]
+  decks: app.Card[][] = []
 
   constructor(public attacking: app.Player, public defensing: app.Player) {
     this.players = [this.attacking, this.defensing]
@@ -25,6 +31,24 @@ export class Fight {
     return this.fighters[Number(!this.fighters.indexOf(fighter))]
   }
 
+  shuffle(fighter: app.Fighter) {
+    this.decks[this.index(fighter)] = this.deck(fighter).sort()
+  }
+
+  draft(fighter: app.Fighter): app.Card {
+    const card = this.deck(fighter).shift() as app.Card
+    this.deck(fighter).push(card)
+    return card
+  }
+
+  deck(fighter: app.Fighter): app.Card[] {
+    return this.decks[this.index(fighter)]
+  }
+
+  index(fighter: app.Fighter): number {
+    return this.fighters.indexOf(fighter)
+  }
+
   applyDamageTo(
     enemy: app.Fighter,
     damages: number,
@@ -36,15 +60,28 @@ export class Fight {
   }
 
   async run(): Promise<app.FightResults> {
+    this.decks = [
+      await app.getDeck(this.players[0]),
+      await app.getDeck(this.players[1]),
+    ]
+
     // todo: process fight
     while (this.fighters.every((fighter) => fighter.hp > 0)) {
       this.fighters.forEach((fighter) => {
-        fighter.actionCharge += fighter.actionInterval
+        fighter.progress += fighter.speed
 
-        if (fighter.actionCharge > 1) {
-          fighter.actionCharge -= 1
+        if (fighter.progress > 1) {
+          fighter.progress -= 1
 
-          // action!
+          const card = this.draft(fighter)
+
+          for (const action of card.actions) {
+            action.run({
+              fight: this,
+              enemy: this.not(fighter),
+              me: fighter,
+            })
+          }
         }
       })
     }
