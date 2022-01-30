@@ -5,6 +5,7 @@ import * as app from "../app"
 export interface FightResults {
   winner?: app.Fighter
   loser?: app.Fighter
+  logs: FightLog[]
 }
 
 export interface FightContext {
@@ -13,10 +14,18 @@ export interface FightContext {
   fight: app.Fight
 }
 
+export interface FightLog {
+  fighter: app.Fighter
+  action: app.Action
+  at: number
+}
+
 export class Fight {
-  players: app.Player[]
-  fighters: app.Fighter[]
-  decks: app.Card[][] = []
+  private progress = 0
+  private players: app.Player[]
+  private fighters: app.Fighter[]
+  private decks: app.Card[][] = []
+  logs: FightLog[] = []
 
   constructor(public attacking: app.Player, public defensing: app.Player) {
     this.players = [this.attacking, this.defensing]
@@ -69,24 +78,40 @@ export class Fight {
     while (this.fighters.every((fighter) => fighter.hp > 0)) {
       this.fighters.forEach((fighter) => {
         fighter.progress += fighter.speed
+        fighter.globalProgress += fighter.speed
 
-        if (fighter.progress > 1) {
+        if (fighter.progress >= 1) {
           fighter.progress -= 1
 
           const card = this.draft(fighter)
 
           for (const action of card.actions) {
-            action.run({
+            const success = action.run({
               fight: this,
               enemy: this.not(fighter),
               me: fighter,
             })
+
+            if (success) {
+              this.logs.push({
+                at: fighter.globalProgress,
+                action,
+                fighter,
+              })
+            }
           }
         }
       })
     }
 
-    return {}
+    const winner = this.fighters.find((fighter) => fighter.hp > 0)
+    const loser = winner ? this.not(winner) : undefined
+
+    return {
+      winner,
+      loser,
+      logs: this.logs,
+    }
   }
 }
 

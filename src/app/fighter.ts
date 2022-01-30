@@ -31,6 +31,11 @@ export interface Fighter extends app.Player {
   progress: number
 
   /**
+   *  Represent the advancement of fighter
+   */
+  globalProgress: number
+
+  /**
    * Represent the prospective (percentage of added gains)
    */
   prospective: number
@@ -63,5 +68,6 @@ export function getFighter(player: app.Player): Fighter {
     hp: 10 + player.level * 2 + (stats.hp ?? 0),
     prospective: player.level / 50 + (stats.prospective ?? 0),
     buffs: [...(stats.buffs ?? [])],
+    globalProgress: 0,
   }
 }
